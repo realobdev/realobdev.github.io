@@ -4,14 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ObDev</title>
+  <meta name="description" content="yapper: obdev">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --ink: #14152b;
-      --ink-soft: #5b5e78;
-      --page: #efebe3;
       --card: #fffdf9;
       --cobalt: #2d3bf0;
       --sun: #ffc52e;
@@ -23,239 +22,73 @@
     body {
       margin: 0;
       min-height: 100vh;
-      padding: 48px 16px;
       display: flex;
+      flex-direction: column;
       justify-content: center;
-      align-items: flex-start;
-      background: var(--page);
+      padding: 40px;
+      background-color: var(--sun);
+      background-image: radial-gradient(rgba(20, 21, 43, 0.2) 1.5px, transparent 1.6px);
+      background-size: 14px 14px;
       color: var(--ink);
       font-family: var(--font);
     }
 
-    .card {
-      width: min(900px, 100%);
-      background: var(--card);
-      border-radius: 24px;
-      overflow: hidden;
+    .hero {
+      width: min(980px, 100%);
+      margin: 0 auto;
     }
 
-    /* Banner: sun-yellow with a halftone dot field, like printed comic paper */
-    .banner {
-      height: 180px;
-      background-color: var(--sun);
-      background-image: radial-gradient(rgba(20, 21, 43, 0.22) 1.5px, transparent 1.6px);
-      background-size: 14px 14px;
-    }
-
-    .profile {
-      display: flex;
-      gap: 26px;
-      padding: 0 40px 28px;
-    }
-
-    /* Avatar is a chat bubble: three round corners, one tight corner */
-    .avatar {
-      position: relative;
-      z-index: 1;
-      flex: none;
-      width: 150px;
-      height: 150px;
-      margin-top: -80px;
-      display: grid;
-      place-items: center;
-      background: var(--cobalt);
-      color: var(--card);
-      border: 6px solid var(--card);
-      border-radius: 50% 50% 50% 16%;
-      font-size: 52px;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-    }
-
-    .info {
-      min-width: 0;
-      padding-top: 22px;
-    }
-
-    .name {
+    /* Big wordmark, tightly set */
+    .title {
       margin: 0;
-      font-size: clamp(40px, 6vw, 62px);
+      font-size: clamp(72px, 17vw, 190px);
       font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.03em;
+      line-height: 0.88;
+      letter-spacing: -0.05em;
     }
 
-    /* The description is what the yapper says, so it sits in a bubble */
-    .bio {
+    /* Same chat-bubble language as the profile page */
+    .bubble {
       display: inline-block;
-      margin: 16px 0 0;
-      padding: 10px 18px;
+      margin-top: 28px;
+      padding: 14px 22px;
       background: var(--cobalt);
       color: var(--card);
-      border-radius: 22px 22px 22px 6px;
-      font-size: 18px;
+      border-radius: 26px 26px 26px 6px;
+      font-size: clamp(18px, 2.4vw, 24px);
       font-weight: 600;
     }
 
-    .stats {
-      margin: 14px 0 0;
-      font-size: 16px;
-      color: var(--ink-soft);
-    }
-
-    .stats strong {
-      color: var(--ink);
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .btn {
-      padding: 12px 22px;
-      font: 800 16px/1 var(--font);
-      color: var(--ink);
-      background: transparent;
-      border: 2px solid var(--ink);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-    }
-
-    .btn:hover { background: rgba(20, 21, 43, 0.06); }
-
-    .btn-follow {
+    .cta {
+      display: inline-block;
+      margin-top: 32px;
+      padding: 16px 26px;
       background: var(--ink);
       color: var(--card);
+      border-radius: 14px;
+      font: 800 18px/1 var(--font);
+      text-decoration: none;
+      transition: background-color 0.15s ease;
     }
 
-    .btn-follow:hover { background: #2c2e52; }
+    .cta:hover { background: #2c2e52; }
 
-    .btn-follow[aria-pressed="true"] {
-      background: var(--cobalt);
-      border-color: var(--cobalt);
-    }
-
-    .btn:focus-visible {
+    .cta:focus-visible {
       outline: 3px solid var(--cobalt);
       outline-offset: 3px;
     }
 
-    /* Tabs are plain words; the active one gets a cobalt underline */
-    .tabs {
-      display: flex;
-      gap: 28px;
-      padding: 0 40px;
-      overflow-x: auto;
-      border-bottom: 1px solid rgba(20, 21, 43, 0.12);
-    }
-
-    .tab {
-      flex: none;
-      padding: 16px 0 13px;
-      font: 600 16px/1 var(--font);
-      color: var(--ink-soft);
-      background: none;
-      border: none;
-      border-bottom: 3px solid transparent;
-      cursor: pointer;
-    }
-
-    .tab[aria-selected="true"] {
-      color: var(--ink);
-      border-bottom-color: var(--cobalt);
-    }
-
-    .panel {
-      padding: 64px 40px;
-      text-align: center;
-    }
-
-    .panel p {
-      margin: 0;
-      font-size: 17px;
-      color: var(--ink-soft);
-    }
-
     @media (max-width: 640px) {
-      body { padding: 20px 12px; }
-      .banner { height: 130px; }
-
-      .profile {
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-        padding: 0 20px 24px;
-        text-align: center;
-      }
-
-      .avatar {
-        width: 120px;
-        height: 120px;
-        margin-top: -64px;
-        font-size: 42px;
-      }
-
-      .info { width: 100%; padding-top: 14px; }
-      .actions { justify-content: center; }
-      .tabs { padding: 0 20px; gap: 22px; }
-      .panel { padding: 44px 20px; }
+      body { padding: 24px 20px; }
     }
   </style>
 </head>
 <body>
-  <main class="card">
-    <div class="banner" aria-hidden="true"></div>
-
-    <section class="profile">
-      <div class="avatar" aria-hidden="true">OD</div>
-
-      <div class="info">
-        <h1 class="name">ObDev</h1>
-        <p class="bio">yapper: obdev</p>
-        <p class="stats"><strong>1001</strong> followers</p>
-
-        <div class="actions">
-          <button class="btn btn-follow" id="follow" aria-pressed="false">Follow</button>
-          <button class="btn">Say hi</button>
-        </div>
-      </div>
-    </section>
-
-    <nav class="tabs" role="tablist">
-      <button class="tab" role="tab" aria-selected="true" data-empty="Nothing yapped yet. Check back soon.">Yaps</button>
-      <button class="tab" role="tab" aria-selected="false" data-empty="No builds yet.">Builds</button>
-      <button class="tab" role="tab" aria-selected="false" data-empty="No notes yet.">Notes</button>
-      <button class="tab" role="tab" aria-selected="false" data-empty="Nothing here yet.">About</button>
-    </nav>
-
-    <section class="panel">
-      <p id="empty-text">Nothing yapped yet. Check back soon.</p>
-    </section>
+  <main class="hero">
+    <h1 class="title">ObDev</h1>
+    <p class="bubble">yapper: obdev</p>
+    <br>
+    <a class="cta" href="@obdev/">Go to @obdev</a>
   </main>
-
-  <script>
-    const followBtn = document.getElementById("follow");
-    followBtn.addEventListener("click", () => {
-      const following = followBtn.getAttribute("aria-pressed") === "true";
-      followBtn.setAttribute("aria-pressed", String(!following));
-      followBtn.textContent = following ? "Follow" : "Following";
-    });
-
-    const tabs = document.querySelectorAll(".tab");
-    const emptyText = document.getElementById("empty-text");
-    tabs.forEach((tab) => {
-      tab.addEventListener("click", () => {
-        tabs.forEach((t) => t.setAttribute("aria-selected", "false"));
-        tab.setAttribute("aria-selected", "true");
-        emptyText.textContent = tab.dataset.empty;
-      });
-    });
-  </script>
 </body>
 </html>
